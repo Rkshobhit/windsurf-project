@@ -1,21 +1,16 @@
 # demo_mcp_server.py
-from mcp.server import Server
-import os
+import asyncio
+from mcp.server.fastmcp import FastMCP
 
-# Create a simple MCP server
-server = Server("DemoMCP")
+# create MCP server
+server = FastMCP("demo-mcp")
 
-@server.command("list_files")
-def list_files(path: str = "."):
-    """List files in a directory"""
-    return os.listdir(path)
+# Example tool
+@server.tool()
+def say_hello(name: str) -> str:
+    """Returns a friendly greeting."""
+    return f"Hello, {name}! This is your MCP server speaking."
 
-@server.command("read_file")
-def read_file(filename: str):
-    """Read a file’s content"""
-    with open(filename, "r", encoding="utf-8") as f:
-        return f.read()
-
+# Run the server
 if __name__ == "__main__":
-    print("🚀 MCP Demo Server running...")
-    server.run()
+    asyncio.run(server.run())
